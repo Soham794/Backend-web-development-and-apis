@@ -12,5 +12,7 @@
 		"url": "https://github.com/freeCodeCamp/boilerplate-npm.git"
 	},
 	"author": "soham belokar",
-	"description": "A project that does something awesome"
+	"description": "A project that does something awesome",
+	"keywords": ["freecodecamp", "cool", "awesome"],
+	"license": "MIT"
 }
