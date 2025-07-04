@@ -63,10 +63,12 @@ app.route("/name")
     // 
     // console.log(req.query);
     // res.json({name: req.query.first + " " + req.query.last});
-    let data = req.body;
-    console.log(data);
-    res.json({name: req.body.first + " " + req.body.last});
     
+    //
+    // let data = req.body;
+    // console.log(data);
+    res.json({name: req.body.first + " " + req.body.last});
+
 });
 
 
