@@ -43,11 +43,19 @@ app.get("/json", (req, res)=>{
     // res.json({"message": msg});
 });
 
+// input from route parameters from client 
 app.get("/:word/echo", (req, res)=>{
     res.json({echo: req.params.word});
 });
 
-
+// input from query parameter from client
+app.route("/name").get((req, res)=>{
+    console.log(req.query);
+    res.json({name: req.query.first + " " +req.query.last});
+}).post((req, res)=>{
+    console.log(req.query);
+    res.json({name: req.query.first + " " + req.query.last});
+});
 
 
 
