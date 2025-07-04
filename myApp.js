@@ -8,7 +8,7 @@ app.use("/public", express.static(__dirname+"/public"));
 
 // custom middleware function
 function midWare(req, res, next){
-    console.log(req.method + " " + req.path + " " + req.ip);
+    console.log(req.method + " " + req.path + " - " + req.ip);
     next();
 }
 
