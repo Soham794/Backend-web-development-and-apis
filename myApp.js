@@ -1,9 +1,14 @@
 
+let bodyParser = require("body-parser");
 let express = require('express');
 require('dotenv').config();
 
 let app = express();
 
+// using body parser to parse data coming from POST requests
+app.use(bodyParser.urlencoded({extended: false}));
+
+// using middleware to load static data on "/public" route
 app.use("/public", express.static(__dirname+"/public"));
 
 // custom middleware function
@@ -50,12 +55,16 @@ app.get("/:word/echo", (req, res)=>{
 
 // input from query parameter from client
 app.route("/name").get((req, res)=>{
-    console.log(req.query);
+    // console.log(req.query);
     res.json({name: req.query.first + " " +req.query.last});
 }).post((req, res)=>{
-    console.log(req.query);
+    // console.log(req.query);
     res.json({name: req.query.first + " " + req.query.last});
 });
+
+
+
+
 
 
 
