@@ -13,8 +13,17 @@ function midWare(req, res, next){
 }
 
 // using custom middleware on every request
-// for specific use -> app.post(<midware-function>);
+// for specific methods -> app.post(<midware-function>), for specific routes -> app.post(path, <midware-function>)
 app.use(midWare);
+
+app.get("/now", function(req, res, next){
+    let time = new Date().toString();
+    // console.log(time);
+    req.time = time;
+    next(); 
+}, function(req, res){
+    res.json({time: req.time});
+});
 
 app.get("/", (req, res)=>{
     res.sendFile(__dirname + "/views/index.html");
