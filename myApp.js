@@ -54,12 +54,19 @@ app.get("/:word/echo", (req, res)=>{
 });
 
 // input from query parameter from client
-app.route("/name").get((req, res)=>{
+app.route("/name")
+.get((req, res)=>{
     // console.log(req.query);
     res.json({name: req.query.first + " " +req.query.last});
-}).post((req, res)=>{
+})
+.post((req, res)=>{
+    // 
     // console.log(req.query);
-    res.json({name: req.query.first + " " + req.query.last});
+    // res.json({name: req.query.first + " " + req.query.last});
+    let data = req.body;
+    console.log(data);
+    res.json({name: req.body.first + " " + req.body.last});
+    
 });
 
 
