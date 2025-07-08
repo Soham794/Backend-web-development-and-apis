@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// to store urls
+// a map to store short urls
 const shortUrls = new Map();
 
 function validUrl(url){
@@ -44,6 +44,7 @@ app.post("/api/shorturl/", (req, res)=>{
   }
 
   let short = -1;
+  // if already present, return the existing short url 
   for(let[key, value] of shortUrls.entries()){
     if(value == url){
       short = key;
@@ -59,6 +60,7 @@ app.post("/api/shorturl/", (req, res)=>{
 
 });
 
+// redirect when requested get with short url
 app.get("/api/shorturl/:short", (req, res)=>{
   const short = parseInt(req.params.short);
   // console.log(shortUrls.get(short));
