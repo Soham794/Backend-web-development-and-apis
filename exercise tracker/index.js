@@ -52,10 +52,13 @@ app.post("/api/users", (req, res)=>{
 // get list of all users
 app.get("/api/users", (req, res)=>{
   // find all users i.e. parameters = {} // none
-  const list = users.find({}).then((doc)=>{
+  users.find({}).then((doc)=>{
     // console.log(doc);
     res.send(doc);
-  }).catch((err)=>{console.log(err)});
+  }).catch((err)=>{
+    console.log(err);
+    res.json({error: "no users found"});
+  });
   // res.json(list);
 });
 
@@ -69,22 +72,23 @@ app.post("/api/users/:_id/exercises", async (req, res)=>{
 
   // validating date 
   if(isNaN(Date.parse(day)) == true || day.length == 0){
-    day = new Date();
-    day = day.toDateString();
+    day = new Date().toDateString();
     // console.log(day);
+  }
+  else{
+    day = new Date(day);
   }
 
   // getting hold of username
   let usrname;
   await users.findById(Id).then((doc)=>{ // find user with given id, if not found return error
-    // console.log("user found");
     usrname = doc.username;
   }).catch((err)=>{
     // console.log("user not found");
     res.json({error: "invalid id"});
   });
 
-  await logs.findOne({id: Id}).then((doc)=>{ // find user with id and log information
+  await logs.findOne({id: Id}).then( (doc)=>{ // find user with id and log information
     // console.log(doc);
     if(doc === null){ // if log not present for given id then create new one
       let log = new logs({username: usrname, count: 1, id: Id, log:[{description: Desc, duration: Duration, date: day}]});
@@ -103,7 +107,7 @@ app.post("/api/users/:_id/exercises", async (req, res)=>{
   }).catch((err)=>{
       console.log(err);
   });
-
+  
   res.json({_id: Id, username: usrname, date: day, duration: parseInt(Duration), description: Desc});
 
 });
@@ -111,9 +115,12 @@ app.post("/api/users/:_id/exercises", async (req, res)=>{
 app.get("/api/users/:_id/logs?", async (req, res)=>{
   const Id = req.params._id;
   const query = req.query;
+  
+  // console.log(req.params._id);
 
   let logFile;
   await logs.findOne({id: Id}).then((doc)=>{ // find the log file of given id
+    // console.log(doc);
     logFile = doc;
   }).catch((err)=>{
     console.log(err);
@@ -125,7 +132,7 @@ app.get("/api/users/:_id/logs?", async (req, res)=>{
   // query parameters execution
   if(query.from !== undefined){
     for(let log of logFile.log){
-      if(log.date >= query.from){
+      if(log.date >= Date(query.from)){
         userLogs.push(log);
       }
     }
@@ -133,18 +140,22 @@ app.get("/api/users/:_id/logs?", async (req, res)=>{
 
   if(query.to !== undefined){
     for(let log of logFile.log){
-      if(log.date <= query.to){
+      if(log.date <= Date(query.to)){
         userLogs.push(log);
       }
     }
   }
 
-  if(query.limit !== undefined){
-    userLogs.splice(query.limit);
+  if(query.from === undefined && query.to === undefined){
+    userLogs = logFile.log;
+  }
+
+  if(query.limit !== undefined && userLogs.length > query.limit){
+    userLogs.splice(query.limit); 
     // console.log(userLogs);
   }
 
-  res.json({_id: Id, username: logFile.username, count: logFile.count, log: userLogs});
+  res.json({_id: Id, username: logFile.username, count: parseInt(logFile.count), log: userLogs});
 
 });
 
